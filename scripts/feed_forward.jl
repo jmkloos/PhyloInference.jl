@@ -1,4 +1,4 @@
-include("./likelihood(4).jl")
+include("../src/Bayesian.jl")
 using Plots
 using Random
 using Statistics
@@ -7,7 +7,6 @@ using LaTeXStrings
 using Colors
 
 Random.seed!(3)
-println("run")
 
 #VARS
 tstart = -3.0

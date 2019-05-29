@@ -1,6 +1,8 @@
 
 using PhyloInference
-Random.seed!(99)println("run")
+using Random
+Random.seed!(99)
+println("run")
 include("feed_forward.jl")
 
 #VARS
