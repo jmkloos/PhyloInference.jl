@@ -1,0 +1,4 @@
+name = "PhyloInference"
+uuid = "18f255d2-8220-11e9-0eb9-9d8de8064a39"
+authors = ["jmkloos <jmkloos@users.noreply.github.com>"]
+version = "0.1.0"
