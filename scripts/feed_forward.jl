@@ -216,7 +216,7 @@ function make_graphs(t,X,Y; folder="output")
     Yobs = [Y[i][end] for i in 1:length(X)]
     t_end = [t[end] for i in 1:length(X)]
     scatter3d!(t_end,Xobs,Yobs, markersize =3, markercolor = [i for i in 1:length(X)],dpi=200)
-    savefig(joinpath(folder,"3dplot.png")
+    savefig(joinpath(folder,"3dplot.png"))
     display(P4)
 end
 
