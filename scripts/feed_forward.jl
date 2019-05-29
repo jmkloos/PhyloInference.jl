@@ -6,7 +6,7 @@ using Distributions
 using LaTeXStrings
 using Colors
 
-Random.seed!(3)
+println("Simulate data from forward model")
 
 #VARS
 tstart = -3.0

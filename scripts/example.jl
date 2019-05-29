@@ -1,10 +1,12 @@
 
 using PhyloInference
 using Random
-Random.seed!(99)
-println("run")
-include("feed_forward.jl")
 
+
+Random.seed!(99)
+include("feed_forward.jl")
+Random.seed!(99)
+println("Run Gibbs algorithm")
 #VARS
 # tstart = -100.0
 # tnow = 0.0
