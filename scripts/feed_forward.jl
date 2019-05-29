@@ -1,4 +1,4 @@
-include("../src/Bayesian.jl")
+
 using Plots
 using Random
 using Statistics
@@ -44,8 +44,7 @@ function main()
     #θ_x,θ_y = main_likelihood(X,Y,tree_struc,split_times,h,θ_x,θ_y)
     TX,order = get_tree(X,tree_struc,split_times, h)
     TY,order = get_tree(Y,tree_struc,split_times, h)
-    θ_x = Likelihood4.main_likelihood(TX,TY,h,σ)
-    θ_y = Likelihood4.main_likelihood(TY,TX,h,σ)
+
     return X, Y, Xobs, Yobs,TY
 end
 
@@ -138,7 +137,7 @@ function random_walk(cur,t,X,Y)
     Y[cur] = [Y[cur];y[2:end]]
 end
 
-function make_graphs(t,X,Y)
+function make_graphs(t,X,Y; folder="output")
     # P0 = plot(legend =:right,dpi = 1000, size= (300,200),fontfamily = "Computer modern",legendfont = (7,"Computer modern"),fg_legend =:transparent,grid=false)
     # #plot!(legend = false)
     # for s in X
@@ -148,7 +147,7 @@ function make_graphs(t,X,Y)
     #     plot!(t, s, label = "Trait Y")
     # end
     # display(P0)
-    # savefig("forward_tree_branch_simple.pdf")
+    # savefig(joinpath(folder,"forward_tree_branch_simple.pdf"))
     # cur_colors = get_color_palette(:phase, plot_color(:white), 4)
     # counter = 1
     # P1 = plot(legend =:bottomleft, dpi = 1000, size= (300,200),fontfamily = "Computer modern",legendfont = (5,"Computer modern"),fg_legend =:transparent,grid=false)
@@ -158,7 +157,7 @@ function make_graphs(t,X,Y)
     #     counter += 1
     # end
     # display(P1)
-    # savefig("forward_tree_drift_X")
+    # savefig(joinpath(folder,"forward_tree_drift_X")
     counter = 1
     P1 = plot(legend =:topleft,dpi = 1000, size= (300,200),fontfamily = "Computer modern",legendfont = (6,"Computer modern"),fg_legend =:transparent,grid=false)
     #plot!(legend = false)
@@ -167,7 +166,7 @@ function make_graphs(t,X,Y)
         counter += 1
     end
     display(P1)
-    savefig("forward_tree_drift_X.pdf")
+    savefig(joinpath(folder,"forward_tree_drift_X.pdf"))
 
     counter = 1
     P2 = plot(legend =:topleft, dpi = 1000, size= (300,200),fontfamily = "Computer modern",legendfont = (6,"Computer modern"),fg_legend =:transparent,grid=false)
@@ -177,7 +176,7 @@ function make_graphs(t,X,Y)
         counter += 1
     end
     display(P2)
-    savefig("forward_tree_drift_Y.pdf")
+    savefig(joinpath(folder,"forward_tree_drift_Y.pdf"))
 
     col = 1/h
     step = Int(round((length(X[1])-1)/col))
@@ -198,7 +197,7 @@ function make_graphs(t,X,Y)
         scatter!([Xobs[i]],[Yobs[i]],markersize = 3,markercolor = i,markerstrokewidth = 1, label = "")
     end
     # scatter!(Xobs,Yobs, markersize = 3, markercolor = [i for i in 1:length(X)],markerstrokewidth = 1.5, labels = ["sp.1","sp.2","sp.1","sp.2"])
-    savefig("forward_scatter.pdf")
+    savefig(joinpath(folder,"forward_scatter.pdf"))
     display(P3)
 
     col = 1#10
@@ -217,7 +216,7 @@ function make_graphs(t,X,Y)
     Yobs = [Y[i][end] for i in 1:length(X)]
     t_end = [t[end] for i in 1:length(X)]
     scatter3d!(t_end,Xobs,Yobs, markersize =3, markercolor = [i for i in 1:length(X)],dpi=200)
-    savefig("3dplot.png")
+    savefig(joinpath(folder,"3dplot.png")
     display(P4)
 end
 

@@ -13,7 +13,8 @@ struct Tree{T}
     tlist::T
 end
 
-function main(tstart,tnow,xstart,ystart,σ,h,θ_x,θ_y,Xobs,Yobs,iter_amount,X,Y)
+function main(tstart,tnow,xstart,ystart,σ,h,θ_x,θ_y,Xobs,Yobs,iter_amount,X,Y; _folder="output")
+    global folder = _folder
     t0 = 0.0
     tend = tnow - tstart
     numspecies = length(Xobs)
@@ -215,7 +216,7 @@ function make_graphs(fignum,t,X,title = "")
         counter += 1
     end
     display(P1)
-    savefig("gibbs_tree$fignum")
+    savefig(joinpath(folder,"gibbs_tree$fignum"))
 end
 
 function make_ribbon_plot(t,Xs,title="")
@@ -232,7 +233,7 @@ function make_ribbon_plot(t,Xs,title="")
         plot!(t,ave, ribbon = (ave-lower, upper-ave), label = "species $s", fillalpha = 0.05)
     end
     display(P2)
-    savefig("ribbon_tree$title.png")
+    savefig(joinpath(folder,"ribbon_tree$title.png"))
 end
 
 function make_theta_plot(θ_xs,θ_ys)
@@ -243,15 +244,15 @@ function make_theta_plot(θ_xs,θ_ys)
     end
     plot!([0,1],[0,1]) #line y = x for reference
     display(P5)
-    savefig("theta.png")
+    savefig(joinpath(folder,"theta.png"))
 
     # P6 = violin(["theta_x" "theta_y"],[θ_xs[3000:end] θ_ys[3000:end]],title = "Violin plot",legend= false,dpi=200)
     # scatter!(["theta_x","theta_y"],[0.9,0.1])
     # display(P6)
-    # savefig("violintheta.png")
+    # savefig(joinpath(folder,"violintheta.png")
 
     plot([θ_xs θ_ys],label=["theta_x","theta_y"],xlabel = "iteration",dpi=200)
-    savefig("theta_change.png")
+    savefig(joinpath(folder,"theta_change.png"))
 end
 
 function get_error(TX,TXR)
