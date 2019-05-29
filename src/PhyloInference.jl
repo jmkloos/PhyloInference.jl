@@ -23,7 +23,7 @@ function main(tstart,tnow,xstart,ystart,σ,h,θ_x,θ_y,Xobs,Yobs,iter_amount,X,Y
 
     tree_struc = create_tree_struc(numspecies)
     #split_times = create_split_vec_old(tend,numspecies)
-    split_times = create_split_vec(tend,numspecies,tree_struc)
+    split_times = create_split_vec(tend,numspecies,tree_struc,h)
     tree_matrix = create_tree_matrix(numspecies,tree_struc,split_times,tend)
 
     #Real trees
@@ -114,7 +114,7 @@ end
 #     randlist = sort(sample(h:h:T-h, n-1, replace=false))
 #     return [0.0; randlist]
 # end
-function create_split_vec(T,n,tree_struc)
+function create_split_vec(T,n,tree_struc,h)
     sample_list = [0.0; sample(h:h:T-h,n-1)]
     split_vec = zeros(n)
     for i in 2:n
