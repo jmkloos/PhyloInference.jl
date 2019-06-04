@@ -3,9 +3,9 @@ using PhyloInference
 using Random
 
 
-Random.seed!(99)
+Random.seed!(1)
 include("feed_forward.jl")
-Random.seed!(99)
+Random.seed!(1)
 println("Run Gibbs algorithm")
 #VARS
 # tstart = -100.0
@@ -13,10 +13,6 @@ println("Run Gibbs algorithm")
 
 # Xobs = [5,7,6,8]
 # Yobs = [6,5,3,4]
-# Xobs = 6.0 .+ √(0.1)*randn(20)
-# Yobs = Xobs
-# xstart = mean(Xobs)
-# ystart = mean(Yobs)
 # σ = 0.1
 # h = 0.01
 θ_x = 0.0

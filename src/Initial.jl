@@ -52,7 +52,7 @@ export main_initial
     end
 
     function main_initial(Xobs,Yobs,numspecies,t0,tend,tree_matrix,h,σ)
-        xstart,ystart = 0.0,0.0#mean(Xobs),mean(Yobs)
+        xstart,ystart = mean(Xobs),mean(Yobs)
         X = [[xstart] for dummy in 1:numspecies]
         Y = [[ystart] for dummy in 1:numspecies]
         feed_forward(1,t0,tend,tree_matrix,X,Y,h,σ,Xobs,Yobs)

@@ -4,7 +4,6 @@ using Random
 using Statistics
 using Distributions
 using LaTeXStrings
-using Colors
 
 println("Simulate data from forward model")
 
@@ -18,16 +17,13 @@ ystart = 3.0
 θ_y = 0.5
 h = 0.1
 #ρ = -0.9
-numspecies = 100
+numspecies = 10
 
 function main()
     t0 = 0.0
     tend = tnow - tstart
     tree_struc = create_tree_struc(numspecies)
-    split_times = create_split_vec_short(tend,numspecies,tree_struc)
-    #split_times = create_split_vec(tend,numspecies)
-    # tree_struc = [0,1,2,3]
-    # split_times = [0.0, 1.0, 2.0, 3.0]
+    split_times = create_split_vec(tend,numspecies,tree_struc,h)
     tree_matrix = create_tree_matrix(numspecies,tree_struc,split_times,tend)
     global X = [[xstart] for dummy in 1:numspecies]
     global Y = [[ystart] for dummy in 1:numspecies]
@@ -40,12 +36,8 @@ function main()
     display(scatter(Xobs,Yobs,size = (300,200),dpi = 200, markersize = 7,legend = false))
     println("Xobs = $Xobs")
     println("Yobs = $Yobs")
-    make_graphs(tvec,X,Y)
-    #θ_x,θ_y = main_likelihood(X,Y,tree_struc,split_times,h,θ_x,θ_y)
-    TX,order = get_tree(X,tree_struc,split_times, h)
-    TY,order = get_tree(Y,tree_struc,split_times, h)
-
-    return X, Y, Xobs, Yobs,TY
+    #make_graphs(tvec,X,Y)
+    return X, Y, Xobs, Yobs
 end
 
 function create_tree_struc(n)
@@ -57,25 +49,7 @@ function create_tree_struc(n)
     return struc
 end
 
-function create_split_vec_old(T,n)
-    split_vec = zeros(n)
-    randlist = rand(Uniform(0.1,T-1),n-1)#change 0.1 to h
-    rounded = [round(i; digits = 2) for i in randlist]
-    if length(rounded) != length(Set(rounded)) #duplicates
-        println("error")
-        return create_split_vec(T,n)
-    else
-        return [0; sort(rounded)]
-    end
-end
-function create_split_vec(T,n)
-    split_vec = zeros(n)
-    randlist = sort(sample(h:h:T-h, n-1, replace=false))
-    return [0.0; randlist]
-end
-
-
-function create_split_vec_short(T,n,tree_struc)
+function create_split_vec(T,n,tree_struc,h)
     m = Int(round(1.1*n))
     sample_list = [0.0; sample(h:h:T-h,m-1)]
     println(sort(sample_list))
@@ -89,7 +63,6 @@ function create_split_vec_short(T,n,tree_struc)
     end
     return split_vec
 end
-
 
 function create_tree_matrix(n,struc,split,tend)
     matrix = zeros(n,n)
@@ -138,26 +111,6 @@ function random_walk(cur,t,X,Y)
 end
 
 function make_graphs(t,X,Y; folder="output")
-    # P0 = plot(legend =:right,dpi = 1000, size= (300,200),fontfamily = "Computer modern",legendfont = (7,"Computer modern"),fg_legend =:transparent,grid=false)
-    # #plot!(legend = false)
-    # for s in X
-    #     plot!(t, s, label = "Trait X")
-    # end
-    # for s in Y
-    #     plot!(t, s, label = "Trait Y")
-    # end
-    # display(P0)
-    # savefig(joinpath(folder,"forward_tree_branch_simple.pdf"))
-    # cur_colors = get_color_palette(:phase, plot_color(:white), 4)
-    # counter = 1
-    # P1 = plot(legend =:bottomleft, dpi = 1000, size= (300,200),fontfamily = "Computer modern",legendfont = (5,"Computer modern"),fg_legend =:transparent,grid=false)
-    # #plot!(legend = false)
-    # for s in X
-    #     plot!(t, s, label = "species $counter", color = cur_colors[counter])
-    #     counter += 1
-    # end
-    # display(P1)
-    # savefig(joinpath(folder,"forward_tree_drift_X")
     counter = 1
     P1 = plot(legend =:topleft,dpi = 1000, size= (300,200),fontfamily = "Computer modern",legendfont = (6,"Computer modern"),fg_legend =:transparent,grid=false)
     #plot!(legend = false)
@@ -218,33 +171,6 @@ function make_graphs(t,X,Y; folder="output")
     scatter3d!(t_end,Xobs,Yobs, markersize =3, markercolor = [i for i in 1:length(X)],dpi=200)
     savefig(joinpath(folder,"3dplot.png"))
     display(P4)
-end
-
-function get_tree(X,tree_struc,split_times, h)
-    println(tree_struc)
-    println(split_times)
-    numspecies = length(tree_struc)
-    T = []
-    order = []
-    function get_branch(T,order,i=1,j=1,t=0.0)
-        first = Int(round(t/h)) + 1
-        if i in tree_struc[j+1:end]
-            k = minimum([n for n in j+1:numspecies if tree_struc[n] == i])
-            tnew = split_times[k]
-            last = Int(round(tnew/h)) + 1
-            branch = X[i][first:last]
-            push!(T,branch)
-            get_branch(T,order,i,k,tnew)
-            get_branch(T,order,k,k,tnew)
-        else
-            last = length(X[i])
-            branch = X[i][first:last]
-            push!(order,i)
-            push!(T,branch)
-        end
-    end
-    get_branch(T,order)
-    return T,order
 end
 
  X, Y, Xobs, Yobs = main()
